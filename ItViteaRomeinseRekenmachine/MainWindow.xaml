@@ -8,7 +8,7 @@
         Title="MainWindow" Height="500" Width="450">
     <Grid Margin="5">
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="4*"/>
@@ -17,14 +17,19 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="0.2*"/>
         </Grid.ColumnDefinitions>
-        <Label Name="LabelInfo" Content="Info" VerticalContentAlignment="Center" Margin="10,2"/>
-        <TextBox Name="TextBxInput" Text="Input" VerticalContentAlignment="Center" Margin="10" Grid.Row="1"/>
+        <Label Name="LabelInfo" Content="" VerticalContentAlignment="Center" Margin="10,2">
+        </Label>
+
+        <!--<TextBox Name="TextBxInput" Text="Input" VerticalContentAlignment="Center" Margin="10" Grid.Row="1"/>
         <TextBox Name="TextBxOutput" Text="Output" Grid.Row="2" VerticalContentAlignment="Center" Margin="10"/>
         <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
             <Button Content="Convert A" Padding="5,2" Click="Btn_Convert_Click"/>
             <Button Content="Convert B" Padding="5,2" Click="Btn_ConvertToRoman_Click"/>
-        </StackPanel>
-        
+        </StackPanel>-->
+
+        <Label Name="InputLabel" Content="" Grid.Row="1" VerticalContentAlignment="Center"/>
+        <Label Name="OutputLabel" Content="" Grid.Row="2" VerticalContentAlignment="Center"/>
+
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -39,24 +44,23 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Button Content="R/A"/>
-            <Button Content="CA" Grid.Column="1"/>
+            <Button Content="CA" Grid.Column="1" Click="Button_ClearAll"/>
             <Button Content="&#x232b;" Grid.Column="2" Grid.ColumnSpan="2"/>
 
+            <Button Content="I" Grid.Row="1" Click="Button_Numbers"/>
+            <Button Content="V" Grid.Row="1" Grid.Column="1" Click="Button_Numbers"/>
+            <Button Name="Divide" Content="&#xf7;" Grid.Row="1" Grid.Column="2" Click="Button_Operators"/>
+            <Button Name="Multiply" Content="&#xd7;" Grid.Row="1" Grid.Column="3" Click="Button_Operators"/>
 
-            <Button Content="I" Grid.Row="1"/>
-            <Button Content="V" Grid.Row="1" Grid.Column="1"/>
-            <Button Content="+" Grid.Row="1" Grid.Column="2"/>
-            <Button Content="&#xd7;" Grid.Row="1" Grid.Column="3"/>
-
-            <Button Content="X" Grid.Row="2" />
-            <Button Content="L" Grid.Row="2" Grid.Column="1"/>
-            <Button Content="-" Grid.Row="2" Grid.Column="2" />
-            <Button Content="&#xf7;" Grid.Row="2" Grid.Column="3"/>
-
-            <Button Content="C" Grid.Row="3"/>
-            <Button Content="D" Grid.Row="3" Grid.Column="1"/>
-            <Button Content="M" Grid.Row="3" Grid.Column="2"/>
-            <Button Content="=" Grid.Row="3" Grid.Column="3"/>
+            <Button Content="X" Grid.Row="2" Click="Button_Numbers"/>
+            <Button Content="L" Grid.Row="2" Grid.Column="1" Click="Button_Numbers"/>
+            <Button Name="Subtract" Content="-" Grid.Row="2" Grid.Column="2" Click="Button_Operators"/>
+            <Button Name="Add" Content="+" Grid.Row="2" Grid.Column="3" Click="Button_Operators"/>
+            
+            <Button Content="C" Grid.Row="3" Click="Button_Numbers"/>
+            <Button Content="D" Grid.Row="3" Grid.Column="1" Click="Button_Numbers"/>
+            <Button Content="M" Grid.Row="3" Grid.Column="2" Click="Button_Numbers"/>
+            <Button Content="=" Grid.Row="3" Grid.Column="3" Click="Button_Result"/>
         </Grid>
 
     </Grid>
