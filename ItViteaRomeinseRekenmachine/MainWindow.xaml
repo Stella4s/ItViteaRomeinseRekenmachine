@@ -24,6 +24,40 @@
             <Button Content="Convert A" Padding="5,2" Click="Btn_Convert_Click"/>
             <Button Content="Convert B" Padding="5,2" Click="Btn_ConvertToRoman_Click"/>
         </StackPanel>
+        
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button Content="R/A"/>
+            <Button Content="CA" Grid.Column="1"/>
+            <Button Content="&#x232b;" Grid.Column="2" Grid.ColumnSpan="2"/>
+
+
+            <Button Content="I" Grid.Row="1"/>
+            <Button Content="V" Grid.Row="1" Grid.Column="1"/>
+            <Button Content="+" Grid.Row="1" Grid.Column="2"/>
+            <Button Content="&#xd7;" Grid.Row="1" Grid.Column="3"/>
+
+            <Button Content="X" Grid.Row="2" />
+            <Button Content="L" Grid.Row="2" Grid.Column="1"/>
+            <Button Content="-" Grid.Row="2" Grid.Column="2" />
+            <Button Content="&#xf7;" Grid.Row="2" Grid.Column="3"/>
+
+            <Button Content="C" Grid.Row="3"/>
+            <Button Content="D" Grid.Row="3" Grid.Column="1"/>
+            <Button Content="M" Grid.Row="3" Grid.Column="2"/>
+            <Button Content="=" Grid.Row="3" Grid.Column="3"/>
+        </Grid>
 
     </Grid>
 </Window>
