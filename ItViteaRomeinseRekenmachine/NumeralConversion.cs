@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -11,14 +12,28 @@ namespace ItViteaRomeinseRekenmachine
     {
         //Private variables.
         private string _ErrorMsg;
+        private List<string> _ErrorList;
 
-        //Public variables and properties.
-        public string ErrorMsg
+        public NumeralConversion()
         {
-            get { return _ErrorMsg; }
+            ErrorList = new List<string>();
+        }
+
+        public List<string> ErrorList
+        {
+            get => _ErrorList;
             set
             {
-                value = _ErrorMsg;
+                _ErrorList = value;
+                OnPropertyChanged("ErrorList");
+            }
+        }
+        public string ErrorMsg
+        {
+            get =>_ErrorMsg;
+            set
+            {
+                 _ErrorMsg = value;
                 OnPropertyChanged("ErrorMsg");
             }
         }
@@ -60,7 +75,11 @@ namespace ItViteaRomeinseRekenmachine
 
             //Check if number does not excede maximum value.
             if (intArabic > 3000)
+            {
                 ErrorMsg = "Number must be below 3000.";
+                ErrorList.Add(ErrorMsg);
+            }
+                
 
             //Check if number isn't 0.
             if (intArabic == 0)
@@ -83,7 +102,6 @@ namespace ItViteaRomeinseRekenmachine
 
         public int RomanToArabic(string strRoman)
         {
-            ErrorMsg = null;
             int RepCount = 1, intIndex = 0, maxDigitValue = 1000, intTotal = 0;
             char chrLast = 'Z';
 
@@ -96,7 +114,8 @@ namespace ItViteaRomeinseRekenmachine
             if (strRoman.Split('V').Length > 2 || strRoman.Split('L').Length > 2
                 || strRoman.Split('D').Length > 2)
             {
-                ErrorMsg += "V, L and D may each only be used once in a sequence.";
+                ErrorMsg = "V, L and D may each only be used once in a sequence.";
+                ErrorList.Add(ErrorMsg);
             }
 
 
@@ -108,7 +127,8 @@ namespace ItViteaRomeinseRekenmachine
                     RepCount++;
                     if (RepCount == 4)
                     {
-                        ErrorMsg += "A single letter may be repeated up to 3 times.";
+                        ErrorMsg = "A single letter may be repeated up to 3 times.";
+                        ErrorList.Add(ErrorMsg);
                     }
                 }
                 else
@@ -126,7 +146,10 @@ namespace ItViteaRomeinseRekenmachine
 
                 //Check for No further numeral or pair may match or exceed the subtracted value. 
                 if (iDigit1 > maxDigitValue)
-                    ErrorMsg += "No further numeral or pair may match or exceed prior subtracted values.";
+                {
+                    ErrorMsg = "No further numeral or pair may match or exceed prior subtracted values.";
+                    ErrorList.Add(ErrorMsg);
+                }
 
                 //Second Digit
                 if (intIndex < strRoman.Length - 1)
@@ -138,10 +161,16 @@ namespace ItViteaRomeinseRekenmachine
                     {
                         //Check if the number subtracted is I, X or C. 
                         if ("IXVC".IndexOf(chrNum1) == -1)
-                            ErrorMsg += "Only I, X or C may be subtracted.";
+                        {
+                            ErrorMsg = "Only I, X or C may be subtracted.";
+                            ErrorList.Add(ErrorMsg);
+                        }
                         //Check if the number subtracted is not smaller than a tenth of the number it is subtracted from.
                         if (iDigit2 > (iDigit1 * 10))
-                            ErrorMsg += "The subtracted number must be no smaller than a tenth of the number it is subtracted from.";
+                        {
+                            ErrorMsg = "The subtracted number must be no smaller than a tenth of the number it is subtracted from.";
+                            ErrorList.Add(ErrorMsg);
+                        }
 
                         //MaxDigit Value adjusted to check for rule 3. iDigit1 adjusted according to subtraction rules.
                         //IntIndex incremented one to skip next digit. (As to not count digit2 twice.)

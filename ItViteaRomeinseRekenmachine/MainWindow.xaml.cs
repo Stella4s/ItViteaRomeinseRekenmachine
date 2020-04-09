@@ -29,7 +29,11 @@ namespace ItViteaRomeinseRekenmachine
         {
             InitializeComponent();
             Conversion = new NumeralConversion();
+            ErrorList = new List<string>();
+            ErrorList.Add("Test");
+            LvError.ItemsSource = ErrorList;
         }
+        public List<string> ErrorList { get; set; }
 
         /// <summary>
         /// Methods that aren't directly tied to any object handler, but instead serve to support those methods.
@@ -55,6 +59,7 @@ namespace ItViteaRomeinseRekenmachine
             {
                 RomanNum1 = strCalculation;
                 ArabicNum1 = Conversion.RomanToArabic(RomanNum1);
+                //InfoTxt.Text = Conversion.ErrorMsg;
                 strCalcDisplayArabic = ArabicNum1.ToString();
             }
             else
@@ -65,7 +70,7 @@ namespace ItViteaRomeinseRekenmachine
                 //Conversion from Roman to Arabic.
                 ArabicNum1 = Conversion.RomanToArabic(RomanNum1);
                 ArabicNum2 = Conversion.RomanToArabic(RomanNum2);
-
+                //InfoTxt.Text = Conversion.ErrorMsg;
                 strCalcDisplayArabic = String.Format("{0}{1}{2}",ArabicNum1, strInputDisplay.Substring(intOprtPosition, 1),ArabicNum2);
             }
            
@@ -109,6 +114,7 @@ namespace ItViteaRomeinseRekenmachine
             strCalcDisplayArabic = null;
             RomanResult = null;
             ArabicResult = 0;
+            IsResultCalculated = false;
         }
 
         private void Calculation()
@@ -146,9 +152,16 @@ namespace ItViteaRomeinseRekenmachine
             strInputDisplay += strDisplay;
             TopDisplayLabel.Content = strInputDisplay;
         }
-        #endregion
 
+        private void UpdateErrorList()
+        {
+            foreach (string error in Conversion.ErrorList)
+            {
+                ErrorList.Add(error);
+            }
+        }
     
+        #endregion
 
         #region Button Methods
         /*private void Btn_Convert_Click(object sender, RoutedEventArgs e)
@@ -167,14 +180,21 @@ namespace ItViteaRomeinseRekenmachine
         {
             ClearAll();
         }
+        private void Button_Clear(object sender, RoutedEventArgs e)
+        {
+            ClearTop();
+        }
 
         private void Button_Numbers(object sender, RoutedEventArgs e)
         {
             Button sendButton = e.Source as Button;
+            if (IsResultCalculated)
+            {
+                ClearTop();
+                IsResultCalculated = false;
+            }
             string BtnContent = sendButton.Content.ToString();
             AddToCalcAndDisplay(BtnContent);
-            if (IsArabicVisible)
-                UpdateArabicDisplay();
         }
 
         private void Button_Operators(object sender, RoutedEventArgs e)
@@ -183,6 +203,12 @@ namespace ItViteaRomeinseRekenmachine
             string BtnContent = sendButton.Content.ToString();
             string BtnName = sendButton.Name.ToString();
             string strForCalc = "";
+            if (IsResultCalculated)
+            {
+                ClearTop();
+                AddToCalcAndDisplay(RomanResult);
+                IsResultCalculated = false;
+            }
 
             switch (BtnName)
             {
@@ -205,8 +231,6 @@ namespace ItViteaRomeinseRekenmachine
             }
 
             AddToCalcAndDisplay(strForCalc, BtnContent);
-            if (IsArabicVisible)
-                UpdateArabicDisplay();
         }
 
         private void Button_Undo(object sender, RoutedEventArgs e)
@@ -217,12 +241,10 @@ namespace ItViteaRomeinseRekenmachine
                 strInputDisplay = strInputDisplay.Remove(TempLDisplay - 1);
                 strCalculation = strCalculation.Remove(TempLDisplay - 1);
                 TopDisplayLabel.Content = strInputDisplay;
-                if (IsArabicVisible)
-                    UpdateArabicDisplay();
             }
         }
-        //Private bool variable for this method.
-        private bool IsArabicVisible = false;
+        //Bool variables for these methods to keep track of Arabic Displays being visible and if a calculation was done.
+        private bool IsArabicVisible = false, IsResultCalculated = false;
         private void Button_RomanArabic(object sender, RoutedEventArgs e)
         {
             UpdateArabicDisplay();
@@ -238,6 +260,7 @@ namespace ItViteaRomeinseRekenmachine
                 BtmDisplayLabel2.Opacity = 1.0;
                 IsArabicVisible = true;
             }
+            UpdateErrorList();
         }
 
         private void Button_Result(object sender, RoutedEventArgs e)
@@ -248,9 +271,9 @@ namespace ItViteaRomeinseRekenmachine
                 Calculation();
                 UpdateArabicDisplay();
                 BtmDisplayLabel.Content = RomanResult;
+                IsResultCalculated = true;
             }
         }
         #endregion
-
     }
 }
