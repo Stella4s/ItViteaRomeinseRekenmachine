@@ -45,7 +45,7 @@
             </Grid.RowDefinitions>
             <Button Content="R/A"/>
             <Button Content="CA" Grid.Column="1" Click="Button_ClearAll"/>
-            <Button Content="&#x232b;" Grid.Column="2" Grid.ColumnSpan="2"/>
+            <Button Content="&#x232b;" Grid.Column="2" Grid.ColumnSpan="2" Click="Button_Undo"/>
 
             <Button Content="I" Grid.Row="1" Click="Button_Numbers"/>
             <Button Content="V" Grid.Row="1" Grid.Column="1" Click="Button_Numbers"/>
