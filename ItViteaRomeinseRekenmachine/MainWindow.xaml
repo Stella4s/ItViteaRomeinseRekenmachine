@@ -6,6 +6,33 @@
         xmlns:local="clr-namespace:ItViteaRomeinseRekenmachine"
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="450">
+
+    <Window.Resources>
+        <Style x:Name="ButtonStyle" TargetType="Button">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Medium"/>
+        </Style>
+
+        <Style TargetType="Label">
+            <Setter Property="Background" Value="WhiteSmoke"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontFamily" Value="Lucida Fax"/>
+            <Setter Property="FontSize" Value="35"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="10,0"/>
+        </Style>
+        <Style x:Key="ArabicDisplayStyle" TargetType="Label">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="FontSize" Value="35"/>
+        </Style>
+
+    </Window.Resources>
+
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -15,10 +42,9 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="0.2*"/>
+            <!-- <ColumnDefinition Width="0.2*"/>-->
         </Grid.ColumnDefinitions>
-        <Label Name="LabelInfo" Content="" VerticalContentAlignment="Center" Margin="10,2">
-        </Label>
+        <Label Name="LabelInfo" Content="" FontSize="16" FontFamily="Segoe UI"/>
 
         <!--<TextBox Name="TextBxInput" Text="Input" VerticalContentAlignment="Center" Margin="10" Grid.Row="1"/>
         <TextBox Name="TextBxOutput" Text="Output" Grid.Row="2" VerticalContentAlignment="Center" Margin="10"/>
@@ -27,10 +53,12 @@
             <Button Content="Convert B" Padding="5,2" Click="Btn_ConvertToRoman_Click"/>
         </StackPanel>-->
 
-        <Label Name="InputLabel" Content="" Grid.Row="1" VerticalContentAlignment="Center"/>
-        <Label Name="OutputLabel" Content="" Grid.Row="2" VerticalContentAlignment="Center"/>
+        <Label Name="TopDisplayLabel" Content="" Grid.Row="1"/>
+        <Label Name="TopDisplayLabel2" Content="" Grid.Row="1" Style="{StaticResource ArabicDisplayStyle}" Opacity="0"/>
+        <Label Name="BtmDisplayLabel" Content="" Grid.Row="2"/>
+        <Label Name="BtmDisplayLabel2" Content="" Grid.Row="2" Style="{StaticResource ArabicDisplayStyle}"  Opacity="0"/>
 
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="3" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -43,7 +71,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Content="R/A"/>
+            <Button Content="R/A" Click="Button_RomanArabic"/>
             <Button Content="CA" Grid.Column="1" Click="Button_ClearAll"/>
             <Button Content="&#x232b;" Grid.Column="2" Grid.ColumnSpan="2" Click="Button_Undo"/>
 

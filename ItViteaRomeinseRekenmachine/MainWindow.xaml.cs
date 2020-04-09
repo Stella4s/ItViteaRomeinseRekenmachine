@@ -21,9 +21,8 @@ namespace ItViteaRomeinseRekenmachine
     public partial class MainWindow : Window
     {
         #region private Variables
-        private string RomanNum1 = null, RomanNum2, strInputDisplay, strCalculation, RomanResult;
+        private string RomanNum1, RomanNum2, strInputDisplay, strCalculation, strCalcDisplayArabic, RomanResult;
         private int ArabicNum1 = 0, ArabicNum2, ArabicResult;
-        private bool IsSecondNumber = false;
         private NumeralConversion Conversion;
         #endregion
         public MainWindow()
@@ -38,35 +37,78 @@ namespace ItViteaRomeinseRekenmachine
         #region Support Methods
         //Private Variables specific for support methods.
         private static char[] chrOperators = {'+', '-' ,'*', '/'};
-
-        private void UpdateNumbers()
+        private Operators CurrentOperator;
+        private enum Operators
         {
-            ArabicNum1 = Conversion.RomanToArabic(RomanNum1);
-            ArabicNum2 = Conversion.RomanToArabic(RomanNum2);
+            Add,
+            Subtract,
+            Multiply,
+            Divide
         }
+
         private void GetNumbers()
         {
             //Get the position of the math operator and use that to get both Roman numbers.
+            //If no operators are found assume only a number was typed in which would be RomanNum1.
             int intOprtPosition = strCalculation.IndexOfAny(chrOperators);
-            RomanNum1 = strCalculation.Substring(0, intOprtPosition);
-            RomanNum2 = strCalculation.Substring(intOprtPosition + 1);
+            if (intOprtPosition == -1)
+            {
+                RomanNum1 = strCalculation;
+                ArabicNum1 = Conversion.RomanToArabic(RomanNum1);
+                strCalcDisplayArabic = ArabicNum1.ToString();
+            }
+            else
+            {
+                RomanNum1 = strCalculation.Substring(0, intOprtPosition);
+                RomanNum2 = strCalculation.Substring(intOprtPosition + 1);
 
-            //Conversion from Roman to Arabic.
-            ArabicNum1 = Conversion.RomanToArabic(RomanNum1);
-            ArabicNum2 = Conversion.RomanToArabic(RomanNum2);
+                //Conversion from Roman to Arabic.
+                ArabicNum1 = Conversion.RomanToArabic(RomanNum1);
+                ArabicNum2 = Conversion.RomanToArabic(RomanNum2);
+
+                strCalcDisplayArabic = String.Format("{0}{1}{2}",ArabicNum1, strInputDisplay.Substring(intOprtPosition, 1),ArabicNum2);
+            }
+           
+        }
+
+        private void UpdateArabicDisplay()
+        {
+            if (string.IsNullOrEmpty(strInputDisplay) == false)
+            {
+                GetNumbers();
+                TopDisplayLabel2.Content = strCalcDisplayArabic;
+                if (string.IsNullOrEmpty(RomanResult) == false)
+                    BtmDisplayLabel2.Content = ArabicResult;
+            }
+        }
+
+        private void ClearTop()
+        {
+            TopDisplayLabel.Content = null;
+            TopDisplayLabel2.Content = null;
+            strInputDisplay = null;
+            strCalculation = null;
+            strCalcDisplayArabic = null;
         }
 
         private void ClearAll()
         {
-            InputLabel.Content = null;
-            OutputLabel.Content = null;
+            TopDisplayLabel.Content = null;
+            BtmDisplayLabel.Content = null;
+            TopDisplayLabel2.Content = null;
+            BtmDisplayLabel2.Content = null;
+            TopDisplayLabel2.Opacity = 0.0;
+            BtmDisplayLabel2.Opacity = 0.0;
+            IsArabicVisible = false;
             RomanNum1 = null;
             RomanNum2 = null;
             ArabicNum1 = 0;
             ArabicNum2 = 0;
             strInputDisplay = null;
             strCalculation = null;
-            IsSecondNumber = false;
+            strCalcDisplayArabic = null;
+            RomanResult = null;
+            ArabicResult = 0;
         }
 
         private void Calculation()
@@ -96,24 +138,17 @@ namespace ItViteaRomeinseRekenmachine
         {
             strCalculation += str;
             strInputDisplay += str;
-            InputLabel.Content = strInputDisplay;
+            TopDisplayLabel.Content = strInputDisplay;
         }
         private void AddToCalcAndDisplay(string strCalc, string strDisplay)
         {
             strCalculation += strCalc;
             strInputDisplay += strDisplay;
-            InputLabel.Content = strInputDisplay;
+            TopDisplayLabel.Content = strInputDisplay;
         }
         #endregion
-        private Operators CurrentOperator;
 
-        private enum Operators
-        {
-            Add,
-            Subtract,
-            Multiply,
-            Divide
-        }
+    
 
         #region Button Methods
         /*private void Btn_Convert_Click(object sender, RoutedEventArgs e)
@@ -137,13 +172,9 @@ namespace ItViteaRomeinseRekenmachine
         {
             Button sendButton = e.Source as Button;
             string BtnContent = sendButton.Content.ToString();
-
-            /* if (IsSecondNumber)
-                 RomanNum2 += BtnContent;
-             else
-                 RomanNum1 += BtnContent;*/
-
             AddToCalcAndDisplay(BtnContent);
+            if (IsArabicVisible)
+                UpdateArabicDisplay();
         }
 
         private void Button_Operators(object sender, RoutedEventArgs e)
@@ -153,7 +184,6 @@ namespace ItViteaRomeinseRekenmachine
             string BtnName = sendButton.Name.ToString();
             string strForCalc = "";
 
-            //CurrentOperator = (Operators)Enum.Parse(typeof(Operators), sendButton.Name.ToString(), true);
             switch (BtnName)
             {
                 case "Add":
@@ -173,11 +203,10 @@ namespace ItViteaRomeinseRekenmachine
                     strForCalc = "/";
                     break;
             }
-            //IsSecondNumber = true;
 
             AddToCalcAndDisplay(strForCalc, BtnContent);
-            //strInputDisplay += String.Format("{0}", BtnContent);
-            //InputLabel.Content = strInputDisplay;
+            if (IsArabicVisible)
+                UpdateArabicDisplay();
         }
 
         private void Button_Undo(object sender, RoutedEventArgs e)
@@ -187,15 +216,39 @@ namespace ItViteaRomeinseRekenmachine
                 int TempLDisplay = (strInputDisplay.Length);
                 strInputDisplay = strInputDisplay.Remove(TempLDisplay - 1);
                 strCalculation = strCalculation.Remove(TempLDisplay - 1);
-                InputLabel.Content = strInputDisplay;
+                TopDisplayLabel.Content = strInputDisplay;
+                if (IsArabicVisible)
+                    UpdateArabicDisplay();
+            }
+        }
+        //Private bool variable for this method.
+        private bool IsArabicVisible = false;
+        private void Button_RomanArabic(object sender, RoutedEventArgs e)
+        {
+            UpdateArabicDisplay();
+            if (IsArabicVisible)
+            {
+                TopDisplayLabel2.Opacity = 0.0;
+                BtmDisplayLabel2.Opacity = 0.0;
+                IsArabicVisible = false;
+            }
+            else
+            {
+                TopDisplayLabel2.Opacity = 1.0;
+                BtmDisplayLabel2.Opacity = 1.0;
+                IsArabicVisible = true;
             }
         }
 
         private void Button_Result(object sender, RoutedEventArgs e)
         {
-            GetNumbers();
-            Calculation();
-            OutputLabel.Content = RomanResult;
+            if (string.IsNullOrEmpty(strCalculation) == false)
+            {
+                GetNumbers();
+                Calculation();
+                UpdateArabicDisplay();
+                BtmDisplayLabel.Content = RomanResult;
+            }
         }
         #endregion
 
