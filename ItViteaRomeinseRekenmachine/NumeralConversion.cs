@@ -11,7 +11,6 @@ namespace ItViteaRomeinseRekenmachine
     public class NumeralConversion : INotifyPropertyChanged
     {
         //Private variables.
-        private string _ErrorMsg;
         private List<string> _ErrorList;
 
         public NumeralConversion()
@@ -19,22 +18,14 @@ namespace ItViteaRomeinseRekenmachine
             ErrorList = new List<string>();
         }
 
+        //Error list to keep track of all the error messages to be displayed above.
         public List<string> ErrorList
         {
-            get => _ErrorList;
+            get {return _ErrorList; }
             set
             {
                 _ErrorList = value;
                 OnPropertyChanged("ErrorList");
-            }
-        }
-        public string ErrorMsg
-        {
-            get =>_ErrorMsg;
-            set
-            {
-                 _ErrorMsg = value;
-                OnPropertyChanged("ErrorMsg");
             }
         }
 
@@ -68,33 +59,40 @@ namespace ItViteaRomeinseRekenmachine
             };
 
         #region Methods
+
         public string ArabicToRoman(int intArabic)
         {
             var romanStrBuild = new StringBuilder();
             string strResult = null;
+            ErrorList.Clear();
 
-            //Check if number does not excede maximum value.
-            if (intArabic > 3000)
+            //Check if number does not excede maximum value or minimum value.
+            if (intArabic > 3999)
             {
-                ErrorMsg = "Number must be below 3000.";
-                ErrorList.Add(ErrorMsg);
+                ErrorList.Add("Number must be below 3999.");
             }
-                
-
-            //Check if number isn't 0.
-            if (intArabic == 0)
-                strResult = "N";
+            else if (intArabic < 0)
+            {
+                ErrorList.Add("Number must be above 0.");
+            }
             else
             {
-                foreach (var item in ArabicRomanDict)
+
+                //Check if number isn't 0.
+                if (intArabic == 0)
+                    strResult = "N";
+                else
                 {
-                    while (intArabic >= item.Key)
+                    foreach (var item in ArabicRomanDict)
                     {
-                        romanStrBuild.Append(item.Value);
-                        intArabic -= item.Key;
+                        while (intArabic >= item.Key)
+                        {
+                            romanStrBuild.Append(item.Value);
+                            intArabic -= item.Key;
+                        }
                     }
+                    strResult = romanStrBuild.ToString();
                 }
-                strResult = romanStrBuild.ToString();
             }
 
             return strResult;
@@ -114,11 +112,10 @@ namespace ItViteaRomeinseRekenmachine
             if (strRoman.Split('V').Length > 2 || strRoman.Split('L').Length > 2
                 || strRoman.Split('D').Length > 2)
             {
-                ErrorMsg = "V, L and D may each only be used once in a sequence.";
-                ErrorList.Add(ErrorMsg);
+                ErrorList.Add("V, L and D may each only be used once in a sequence.");
             }
 
-
+        
             //Check rule 1. A single letter may be repeated up to 3 times.
             foreach (char numeral in strRoman)
             {
@@ -127,8 +124,8 @@ namespace ItViteaRomeinseRekenmachine
                     RepCount++;
                     if (RepCount == 4)
                     {
-                        ErrorMsg = "A single letter may be repeated up to 3 times.";
-                        ErrorList.Add(ErrorMsg);
+                        ErrorList.Add("A single letter may be repeated up to 3 times.");
+                        break;
                     }
                 }
                 else
@@ -147,8 +144,7 @@ namespace ItViteaRomeinseRekenmachine
                 //Check for No further numeral or pair may match or exceed the subtracted value. 
                 if (iDigit1 > maxDigitValue)
                 {
-                    ErrorMsg = "No further numeral or pair may match or exceed prior subtracted values.";
-                    ErrorList.Add(ErrorMsg);
+                        ErrorList.Add("No further numeral or pair may match or exceed prior subtracted values.");
                 }
 
                 //Second Digit
@@ -162,14 +158,12 @@ namespace ItViteaRomeinseRekenmachine
                         //Check if the number subtracted is I, X or C. 
                         if ("IXVC".IndexOf(chrNum1) == -1)
                         {
-                            ErrorMsg = "Only I, X or C may be subtracted.";
-                            ErrorList.Add(ErrorMsg);
+                            ErrorList.Add("Only I, X or C may be subtracted.");
                         }
                         //Check if the number subtracted is not smaller than a tenth of the number it is subtracted from.
                         if (iDigit2 > (iDigit1 * 10))
                         {
-                            ErrorMsg = "The subtracted number must be no smaller than a tenth of the number it is subtracted from.";
-                            ErrorList.Add(ErrorMsg);
+                            ErrorList.Add("The subtracted number must be no smaller than a tenth of the number it is subtracted from.");
                         }
 
                         //MaxDigit Value adjusted to check for rule 3. iDigit1 adjusted according to subtraction rules.
