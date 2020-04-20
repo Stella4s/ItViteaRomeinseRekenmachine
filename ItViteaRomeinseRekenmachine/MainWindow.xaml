@@ -5,9 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ItViteaRomeinseRekenmachine"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="450">
+        Title="MainWindow" Height="550" Width="475">
 
     <Window.Resources>
+        <Style x:Name="ErrorListStyle" TargetType="ItemsControl">
+            <Setter Property="Background" Value="WhiteSmoke"/>
+            <Setter Property="Padding" Value="5,5"/>
+        </Style>
+        
         <Style x:Name="ButtonStyle" TargetType="Button">
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
@@ -22,6 +27,7 @@
             <Setter Property="FontSize" Value="35"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="BorderBrush" Value="White"/>
         </Style>
         <Style x:Key="ArabicDisplayStyle" TargetType="Label">
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -33,10 +39,8 @@
 
     </Window.Resources>
 
+
     <Grid Margin="5">
-        <Grid.DataContext>
-            <local:NumeralConversion/>
-        </Grid.DataContext>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
@@ -45,24 +49,16 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <!-- <ColumnDefinition Width="0.2*"/>-->
         </Grid.ColumnDefinitions>
-        <ListView Name="LvError">
-        </ListView>
-        <!--<TextBlock Name="InfoTxt" FontSize="16" TextWrapping="Wrap" Padding="2,0" Panel.ZIndex="0"/>-->
-        <!-- <Label Name="LabelInfo" Content="" FontSize="16" FontFamily="Segoe UI"/>-->
+        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+            <ItemsControl  x:Name="LvError"/>
+        </ScrollViewer>
 
-        <!--<TextBox Name="TextBxInput" Text="Input" VerticalContentAlignment="Center" Margin="10" Grid.Row="1"/>
-        <TextBox Name="TextBxOutput" Text="Output" Grid.Row="2" VerticalContentAlignment="Center" Margin="10"/>
-        <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
-            <Button Content="Convert A" Padding="5,2" Click="Btn_Convert_Click"/>
-            <Button Content="Convert B" Padding="5,2" Click="Btn_ConvertToRoman_Click"/>
-        </StackPanel>-->
-
-        <Label Name="TopDisplayLabel" Content="" Grid.Row="1"/>
+        <Label Name="TopDisplayLabel" Content="" Grid.Row="1"  BorderThickness="0,1,0,0"/>
         <Label Name="TopDisplayLabel2" Content="" Grid.Row="1" Style="{StaticResource ArabicDisplayStyle}" Opacity="0"/>
-        <Label Name="BtmDisplayLabel" Content="" Grid.Row="2"/>
+        <Label Name="BtmDisplayLabel" Content="" Grid.Row="2" BorderThickness="0,0,0,1"/>
         <Label Name="BtmDisplayLabel2" Content="" Grid.Row="2" Style="{StaticResource ArabicDisplayStyle}"  Opacity="0"/>
+
 
         <Grid Grid.Row="3" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
@@ -99,4 +95,5 @@
         </Grid>
 
     </Grid>
+
 </Window>

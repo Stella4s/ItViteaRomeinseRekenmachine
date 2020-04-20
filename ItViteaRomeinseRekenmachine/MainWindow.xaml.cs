@@ -18,22 +18,22 @@ namespace ItViteaRomeinseRekenmachine
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window 
     {
         #region private Variables
         private string RomanNum1, RomanNum2, strInputDisplay, strCalculation, strCalcDisplayArabic, RomanResult;
         private int ArabicNum1 = 0, ArabicNum2, ArabicResult;
         private NumeralConversion Conversion;
+       
+
         #endregion
         public MainWindow()
         {
             InitializeComponent();
             Conversion = new NumeralConversion();
-            ErrorList = new List<string>();
-            ErrorList.Add("Test");
-            LvError.ItemsSource = ErrorList;
+            
         }
-        public List<string> ErrorList { get; set; }
+
 
         /// <summary>
         /// Methods that aren't directly tied to any object handler, but instead serve to support those methods.
@@ -59,7 +59,6 @@ namespace ItViteaRomeinseRekenmachine
             {
                 RomanNum1 = strCalculation;
                 ArabicNum1 = Conversion.RomanToArabic(RomanNum1);
-                //InfoTxt.Text = Conversion.ErrorMsg;
                 strCalcDisplayArabic = ArabicNum1.ToString();
             }
             else
@@ -70,7 +69,6 @@ namespace ItViteaRomeinseRekenmachine
                 //Conversion from Roman to Arabic.
                 ArabicNum1 = Conversion.RomanToArabic(RomanNum1);
                 ArabicNum2 = Conversion.RomanToArabic(RomanNum2);
-                //InfoTxt.Text = Conversion.ErrorMsg;
                 strCalcDisplayArabic = String.Format("{0}{1}{2}",ArabicNum1, strInputDisplay.Substring(intOprtPosition, 1),ArabicNum2);
             }
            
@@ -115,6 +113,7 @@ namespace ItViteaRomeinseRekenmachine
             RomanResult = null;
             ArabicResult = 0;
             IsResultCalculated = false;
+            LvError.Items.Clear();
         }
 
         private void Calculation()
@@ -152,29 +151,18 @@ namespace ItViteaRomeinseRekenmachine
             strInputDisplay += strDisplay;
             TopDisplayLabel.Content = strInputDisplay;
         }
-
-        private void UpdateErrorList()
+    
+        private void UpdateListErrors()
         {
-            foreach (string error in Conversion.ErrorList)
+            LvError.Items.Clear();
+            foreach (string item in Conversion.ErrorList)
             {
-                ErrorList.Add(error);
+                LvError.Items.Add(item);
             }
         }
-    
         #endregion
 
         #region Button Methods
-        /*private void Btn_Convert_Click(object sender, RoutedEventArgs e)
-        {
-            string strInput = TextBxInput.Text.ToUpper();
-            TextBxOutput.Text = RomanToArabic(strInput).ToString();
-        }
-        
-        private void Btn_ConvertToRoman_Click(object sender, RoutedEventArgs e)
-        {
-            int intInput = Convert.ToInt32(TextBxOutput.Text);
-            TextBxInput.Text = ArabicToRoman(intInput);
-        }*/
 
         private void Button_ClearAll(object sender, RoutedEventArgs e)
         {
@@ -260,7 +248,6 @@ namespace ItViteaRomeinseRekenmachine
                 BtmDisplayLabel2.Opacity = 1.0;
                 IsArabicVisible = true;
             }
-            UpdateErrorList();
         }
 
         private void Button_Result(object sender, RoutedEventArgs e)
@@ -270,6 +257,7 @@ namespace ItViteaRomeinseRekenmachine
                 GetNumbers();
                 Calculation();
                 UpdateArabicDisplay();
+                UpdateListErrors();
                 BtmDisplayLabel.Content = RomanResult;
                 IsResultCalculated = true;
             }
